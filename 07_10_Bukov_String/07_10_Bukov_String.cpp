@@ -23,6 +23,31 @@ public:
 
     // Метод для получения указателя на данные
     const char* c_str() const;
+
+    char& operator[] (size_t index) 
+    {
+        if(index < length)
+        {
+            return data[index];
+        }
+        else
+        {
+            std::cout << "Index out of range." << std::endl;
+            exit(1);
+        }
+    }
+    const char& operator[](size_t index) const 
+    {
+        if (index < length) 
+        {
+            return data[index];
+        } else 
+        {
+            std::cout << "Index out of range." << std::endl;
+            exit(1);
+        }
+    }
+    
 };
 
 // Реализация конструктора с инициализацией C-строкой
@@ -59,12 +84,16 @@ const char* String::c_str() const
 
 int main() 
 {
+    setlocale(LC_ALL, "rus");
     const char* cstr = "Hello, World!";
     String str(cstr);
 
     String str2(std::move(str)); 
 
-    std::cout << "str2: " << str2.c_str() << std::endl;
+    std::cout << "Изначальная строка " << str2.c_str() << std::endl;
+
+    str2[7] = '!'; // Изменение символа по индексу
+    std::cout << "Строка после замены символа при помощи [] " << str2.c_str() << std::endl;
 
     return 0;
 }
