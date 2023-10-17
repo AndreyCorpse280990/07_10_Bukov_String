@@ -10,7 +10,7 @@ private:
 
 public:
     // Конструктор по умолчанию
-    String();
+    String() = default;
 
     // Конструктор с инициализацией C-строкой
     String(const char* cstr);
