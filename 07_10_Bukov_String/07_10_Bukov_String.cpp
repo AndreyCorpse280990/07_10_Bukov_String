@@ -25,9 +25,6 @@ public:
     const char* c_str() const;
 };
 
-// Реализация конструктора по умолчанию
-String::String() : data(nullptr), length(0) {}
-
 // Реализация конструктора с инициализацией C-строкой
 String::String(const char* cstr) : data(nullptr), length(0) 
 {
