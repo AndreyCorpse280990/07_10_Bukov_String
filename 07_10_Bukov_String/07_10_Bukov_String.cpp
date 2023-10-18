@@ -29,8 +29,9 @@ public:
     char& operator[] (size_t index);
     const char& operator[](size_t index) const;
     
-    // Перегрузка оператора () для замены символа по индексу
-    void operator()(size_t index, char newChar);
+    // Перегрузка оператора ()
+    int operator()(char character) const;
+    operator int() const;
 };
 
 // Реализация конструктора с инициализацией C-строкой
@@ -85,27 +86,48 @@ const char& String::operator[](size_t index) const
 
 
 // Реализация перегрузки()
-void String::operator()(size_t index, char newChar) 
+int String::operator()(char character) const 
+{
+    for (size_t i = 0; i < length; ++i) 
     {
-        assert((index < length) and "Index out of range.");
-        data[index] = newChar;
+        if (data[i] == character) 
+        {
+            return int(i);
+        }
     }
+    return -1; // Возвращает -1, если символ не найден.
+}
 
-int main() 
+String::operator int() const 
+{
+    return int(length);
+}
+
+int main()
 {
     setlocale(LC_ALL, "rus");
     const char* cstr = "Hello, World!";
     String str(cstr);
 
-    String str2(std::move(str)); 
+    String str2(std::move(str));
 
     std::cout << "Изначальная строка " << str2.c_str() << std::endl;
 
     str2[7] = '!'; // Изменение символа по индексу
     std::cout << "Строка после замены символа при помощи [] " << str2.c_str() << std::endl;
 
-    str2(9, '?'); // Замена символа по индексу 9 на '?'
-    std::cout << "Строка после замены символа при помощи () " << str2.c_str() << std::endl;
+    int len = int(str2);
+    std::cout << "Длина строки: " << len << std::endl;
+    int index = str2('d');
+    if (index != -1) 
+    {
+        std::cout << "Индекс символа 'd': " << index << std::endl;
+    }
+    else 
+    {
+        std::cout << "Символ не найден." << std::endl;
+    }
 
     return 0;
 }
+
