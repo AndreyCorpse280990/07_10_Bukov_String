@@ -1,5 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <cassert>
 #include <cstring>
 
 class String 
@@ -23,10 +24,14 @@ public:
 
     // Метод для получения указателя на данные
     const char* c_str() const;
-};
 
-// Реализация конструктора по умолчанию
-String::String() : data(nullptr), length(0) {}
+    // Перезагрузка операторов []
+    char& operator[] (size_t index);
+    const char& operator[](size_t index) const;
+    
+    // Перегрузка оператора () для замены символа по индексу
+    void operator()(size_t index, char newChar);
+};
 
 // Реализация конструктора с инициализацией C-строкой
 String::String(const char* cstr) : data(nullptr), length(0) 
@@ -35,6 +40,7 @@ String::String(const char* cstr) : data(nullptr), length(0)
     data = new char[length + 1];
     strncpy(data, cstr, length);
     data[length] = '\0';
+    std::cout << "Конструктор с инициализацией C-строкой отработал по адресу " << this << std::endl;
 }
 
 // Реализация конструктора перемещения
@@ -47,12 +53,17 @@ String::String(String&& other) : data(nullptr), length(0)
     // Обнуляю other
     other.data = nullptr;
     other.length = 0;
+    std::cout << "Констуктор перемещения отработал по адресу " << this << std::endl;
 }
 
+
 // Реализация деструктора
-String::~String() {
+String::~String() 
+{
     delete[] data;
+    std::cout << "Деструктор отработал по адресу " << this << std::endl;
 }
+
 
 // Реализация метода c_str()
 const char* String::c_str() const 
@@ -60,14 +71,41 @@ const char* String::c_str() const
     return data;
 }
 
+// Реализация перегузок []
+char& String::operator[] (size_t index) 
+    {
+        assert((index < length) and "Index out of range.");
+        return data[index];
+    }
+const char& String::operator[](size_t index) const 
+    {
+        assert((index < length) and "Index out of range.");
+        return data[index];
+    }
+
+
+// Реализация перегрузки()
+void String::operator()(size_t index, char newChar) 
+    {
+        assert((index < length) and "Index out of range.");
+        data[index] = newChar;
+    }
+
 int main() 
 {
+    setlocale(LC_ALL, "rus");
     const char* cstr = "Hello, World!";
     String str(cstr);
 
     String str2(std::move(str)); 
 
-    std::cout << "str2: " << str2.c_str() << std::endl;
+    std::cout << "Изначальная строка " << str2.c_str() << std::endl;
+
+    str2[7] = '!'; // Изменение символа по индексу
+    std::cout << "Строка после замены символа при помощи [] " << str2.c_str() << std::endl;
+
+    str2(9, '?'); // Замена символа по индексу 9 на '?'
+    std::cout << "Строка после замены символа при помощи () " << str2.c_str() << std::endl;
 
     return 0;
 }
