@@ -1,5 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <cassert>
 #include <cstring>
 
 class String 
@@ -26,26 +27,13 @@ public:
 
     char& operator[] (size_t index) 
     {
-        if(index < length)
-        {
-            return data[index];
-        }
-        else
-        {
-            std::cout << "Index out of range." << std::endl;
-            exit(1);
-        }
+        assert((index < length) and "Index out of range.");
+        return data[index];
     }
     const char& operator[](size_t index) const 
     {
-        if (index < length) 
-        {
-            return data[index];
-        } else 
-        {
-            std::cout << "Index out of range." << std::endl;
-            exit(1);
-        }
+        assert((index < length) and "Index out of range.");
+        return data[index];
     }
     
 };
